@@ -1,0 +1,52 @@
+*{
+    margin:auto;
+    margin-top: 20px;
+    background-color: rgb(214, 209, 198);
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+h2{
+    text-align: center;
+}
+
+.lose{
+    display:none;
+    margin:auto;
+    text-align: center;
+    z-index:10;
+    margin-top: -300px;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.mid{
+    margin-top: 1100px;
+    margin:auto;
+    text-align: center;
+}
+
+.out{
+    margin:auto;
+    text-align: center;
+}
+
+
+.one{
+    display:flex;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
