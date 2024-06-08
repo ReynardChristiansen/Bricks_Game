@@ -20,7 +20,7 @@ Scoring:
 
 - Losing a life occurs when the ball falls below the paddle.
 
-- The game will lose if the life equal to zero
+- The game will lose if the life equal to zero.
 ## How to Play
 
 Access the Game: Visit the following URL to play the Snake Game:
