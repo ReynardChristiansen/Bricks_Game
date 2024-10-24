@@ -1,6 +1,9 @@
 
 ## Break the Bricks
 Welcome to Break the Bricks! This game offers an exciting gameplay experience where you control a paddle to bounce a ball and break bricks. Your objective is to break all the bricks on the screen while avoiding letting the ball fall below the paddle.
+
+![image alt](https://reynardchristiansen.github.io/porto/assets/project-5.jpg)
+
 ## Gameplay
 
 Controls:
