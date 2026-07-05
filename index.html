@@ -2,27 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Break</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0b1020">
+    <meta name="description" content="Break the Bricks — a modern neon brick-breaker game.">
+    <title>Break the Bricks</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%235b7cfa'/%3E%3Cg fill='white'%3E%3Crect x='6' y='7' width='6' height='3' rx='1' opacity='.95'/%3E%3Crect x='13' y='7' width='6' height='3' rx='1' opacity='.7'/%3E%3Crect x='20' y='7' width='6' height='3' rx='1' opacity='.95'/%3E%3Crect x='6' y='12' width='6' height='3' rx='1' opacity='.7'/%3E%3Crect x='13' y='12' width='6' height='3' rx='1' opacity='.95'/%3E%3Crect x='20' y='12' width='6' height='3' rx='1' opacity='.7'/%3E%3Ccircle cx='16' cy='20.5' r='2.2'/%3E%3Crect x='10' y='24.6' width='12' height='2.6' rx='1.3'/%3E%3C/g%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Bricks Breaking</h2>
+    <main class="app">
+        <header class="topbar">
+            <h1 class="brand">
+                <span class="brand-logo">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="30" height="30" rx="8" fill="#5b7cfa"/>
+                        <g fill="#fff">
+                            <rect x="6" y="7" width="6" height="3" rx="1" opacity=".95"/>
+                            <rect x="13" y="7" width="6" height="3" rx="1" opacity=".7"/>
+                            <rect x="20" y="7" width="6" height="3" rx="1" opacity=".95"/>
+                            <rect x="6" y="12" width="6" height="3" rx="1" opacity=".7"/>
+                            <rect x="13" y="12" width="6" height="3" rx="1" opacity=".95"/>
+                            <rect x="20" y="12" width="6" height="3" rx="1" opacity=".7"/>
+                            <circle cx="16" cy="20.5" r="2.2"/>
+                            <rect x="10" y="24.6" width="12" height="2.6" rx="1.3"/>
+                        </g>
+                    </svg>
+                </span>
+                <span class="brand-text"><span class="brand-break">Break</span> <span class="brand-bricks">the Bricks</span></span>
+            </h1>
+        </header>
 
-    <div class="mid">
-        <canvas id="breakout" width="504px" height="500px"></canvas>
-    </div>
+        <section class="stage">
+            <!-- Heads-up display: stats + controls on one row -->
+            <div class="hud">
+                <div class="hud-item" title="Score">
+                    <span class="hud-label">SCORE</span>
+                    <span id="score" class="hud-value">0</span>
+                </div>
+                <div class="hud-item hud-lives" title="Lives">
+                    <span class="hud-label">LIVES</span>
+                    <span id="lives" class="hud-value">♥ ♥ ♥</span>
+                </div>
+                <div class="hud-item" title="Level">
+                    <span class="hud-label">LEVEL</span>
+                    <span id="level" class="hud-value">1</span>
+                </div>
+                <div class="hud-controls">
+                    <button id="soundBtn" class="icon-btn" aria-label="Toggle sound" title="Sound on/off">
+                        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M11 5 6 9H2v6h4l5 4z"/>
+                            <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+                            <path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                        </svg>
+                    </button>
+                    <button id="pauseBtn" class="icon-btn" aria-label="Pause" title="Pause">
+                        <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true">
+                            <rect x="6" y="5" width="4" height="14" rx="1.2"/>
+                            <rect x="14" y="5" width="4" height="14" rx="1.2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-    <div id ="show"class="lose">You Lose</div>
-    <div id ="show2"class="lose">You Win</div>
+            <!-- Game surface (JS sizes the board to contain-fit this area) -->
+            <div class="board-area" id="boardArea">
+            <div class="canvas-wrap" id="canvasWrap">
+                <canvas id="breakout"></canvas>
 
-    <div class="out">
-            <div id="tampil" class="bottom1" width="100px"></div>
-            <div id="tampil2" class="bottom2"></div>
-    </div>
-    
+                <!-- Overlays -->
+                <div id="overlay" class="overlay is-visible" data-screen="start">
+                    <div class="overlay-card">
+                        <div id="overlayIcon" class="overlay-icon">
+                            <svg viewBox="0 0 32 32" width="56" height="56" fill="none" aria-hidden="true">
+                                <rect x="1" y="1" width="30" height="30" rx="8" fill="#5b7cfa"/>
+                                <g fill="#fff">
+                                    <rect x="6" y="7" width="6" height="3" rx="1" opacity=".95"/>
+                                    <rect x="13" y="7" width="6" height="3" rx="1" opacity=".7"/>
+                                    <rect x="20" y="7" width="6" height="3" rx="1" opacity=".95"/>
+                                    <rect x="6" y="12" width="6" height="3" rx="1" opacity=".7"/>
+                                    <rect x="13" y="12" width="6" height="3" rx="1" opacity=".95"/>
+                                    <rect x="20" y="12" width="6" height="3" rx="1" opacity=".7"/>
+                                    <circle cx="16" cy="20.5" r="2.2"/>
+                                    <rect x="10" y="24.6" width="12" height="2.6" rx="1.3"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <h2 id="overlayTitle" class="overlay-title">Break the Bricks</h2>
+                        <p id="overlaySub" class="overlay-sub">Clear every brick. Don't drop the ball.</p>
+                        <p id="overlayScore" class="overlay-score"></p>
+                        <button id="primaryBtn" class="btn-primary">Play</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Mobile touch controls -->
+            <div class="touch-controls" id="touchControls" aria-hidden="true">
+                <button class="pad-btn" id="leftBtn" aria-label="Move left">◄</button>
+                <button class="pad-btn pad-launch" id="launchBtn" aria-label="Launch ball">●</button>
+                <button class="pad-btn" id="rightBtn" aria-label="Move right">►</button>
+            </div>
+        </section>
+
+        <footer class="foot">
+            <p>&copy; 2026 Reynard Christiansen &nbsp;·&nbsp; Break the Bricks</p>
+        </footer>
+    </main>
+
     <script src="script.js"></script>
-
 </body>
 </html>

@@ -1,52 +1,300 @@
-*{
-    margin:auto;
-    margin-top: 20px;
-    background-color: rgb(214, 209, 198);
-    font-family:Arial, Helvetica, sans-serif;
+/* ============================================================
+   Break the Bricks — minimal, modern UI
+   Restrained palette · one accent · clean type · calm surfaces
+   ============================================================ */
+
+:root {
+    --bg: #0f1115;
+    --panel: #171a20;
+    --panel-2: #1c2028;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --text: #e8eaf0;
+    --muted: #8b909d;
+    --accent: #5b7cfa;
+    --accent-press: #4c6bf0;
+    --heart: #f2606a;
+    --radius: 20px;
+    --radius-sm: 12px;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
 
-h2{
+html, body { height: 100%; }
+
+body {
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-feature-settings: "cv11", "ss01";
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app {
+    width: 100%;
+    max-width: 460px;
+    padding: max(18px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 100dvh;
+}
+
+/* ---------- Header: brand only ---------- */
+.topbar {
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+}
+
+.brand-logo {
+    display: flex;
+    line-height: 0;
+    filter: drop-shadow(0 3px 8px rgba(91, 124, 250, 0.35));
+}
+
+.brand-break { color: var(--text); }
+.brand-bricks { color: var(--muted); font-weight: 500; }
+
+/* ---------- Stage ---------- */
+.stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+/* ---------- HUD (stats row) ---------- */
+.hud {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 0 2px;
+}
+
+.hud-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex-shrink: 0;
+    min-width: 58px;
+}
+
+.hud-label {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.hud-value {
+    font-size: 20px;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.hud-lives .hud-value {
+    display: flex;
+    gap: 5px;
+    font-size: 15px;
+}
+
+.hud-lives .heart { color: var(--heart); }
+.hud-lives .heart.lost { color: rgba(255, 255, 255, 0.16); }
+
+.hud-controls {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    font-size: 17px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.icon-btn:hover { background: var(--panel-2); color: var(--text); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn.is-off { opacity: 0.5; }
+
+/* ---------- Canvas ---------- */
+/* Flexible area that fills the space left after header, HUD and footer.
+   JS sizes the board to the largest 6:7 box that fits inside it. */
+.board-area {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.canvas-wrap {
+    position: relative;
+    /* width/height set by JS (resizeCanvas) to keep an exact 6:7 board */
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--line);
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+.canvas-wrap.shake { animation: shake 0.25s ease; }
+
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-3px, 2px); }
+    50% { transform: translate(3px, -2px); }
+    75% { transform: translate(-2px, 1px); }
+}
+
+/* ---------- Overlay ---------- */
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(15, 17, 21, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 5;
+}
+
+.overlay.is-visible { opacity: 1; pointer-events: auto; }
+
+.overlay-card {
     text-align: center;
+    max-width: 320px;
+    animation: rise 0.28s cubic-bezier(0.22, 0.8, 0.3, 1);
 }
 
-.lose{
-    display:none;
-    margin:auto;
+@keyframes rise {
+    from { transform: translateY(12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.overlay-icon {
+    margin-bottom: 16px;
+    line-height: 0;
+    display: flex;
+    justify-content: center;
+    color: var(--muted);
+}
+
+.overlay-title {
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+}
+
+.overlay-sub {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.overlay-score {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    min-height: 18px;
+    margin: 10px 0 0;
+}
+
+.btn-primary {
+    margin-top: 22px;
+    padding: 13px 40px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover { background: var(--accent-press); }
+.btn-primary:active { transform: scale(0.96); }
+
+/* ---------- Touch controls (mobile only) ---------- */
+.touch-controls {
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.pad-btn {
+    flex: 1;
+    max-width: 120px;
+    height: 56px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.08s ease;
+    touch-action: none;
+}
+
+.pad-btn:active { background: var(--panel-2); transform: scale(0.97); }
+.pad-launch { color: var(--accent); }
+
+@media (pointer: coarse) {
+    .touch-controls { display: flex; }
+}
+
+/* ---------- Footer ---------- */
+.foot {
     text-align: center;
-    z-index:10;
-    margin-top: -300px;
-    font-size: 50px;
-    font-weight: bold;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    opacity: 0.7;
 }
-
-.mid{
-    margin-top: 1100px;
-    margin:auto;
-    text-align: center;
-}
-
-.out{
-    margin:auto;
-    text-align: center;
-}
-
-
-.one{
-    display:flex;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
